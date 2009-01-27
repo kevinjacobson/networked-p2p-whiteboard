@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
 # btpeer.py
+# A modification of code written by Nadeem Adbul Hamid
+# nhamid@berry.edu
 
 import socket
 import struct
