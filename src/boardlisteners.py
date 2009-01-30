@@ -5,10 +5,6 @@ import socket
 import SocketServer
 import sys
 import btpeer
-import struct
-import re
-BUFSIZE=1024
-numbers = re.compile("\d+")
 
 class Move:
     def __init__(self,points,ownerid):
@@ -19,7 +15,7 @@ class Move:
         str(self.end)+'-'+str(self.start)
         self.ownerid = ownerid
     def __str__(self):
-        result =  str(self.start[0]) + " " + str(self.start[1]) + " " + str(self.end[0]) + " " + str(self.end[1])
+        result = "Owner #"+str(self.ownerid) + ":\n" + str(self.start[0]) + " " + str(self.start[1]) + " " + str(self.end[0]) + " " + str(self.end[1]) 
         #print result
         return result
 
@@ -67,7 +63,7 @@ class Peers(btpeer.BTPeer,threading.Thread):
         print "Message:\n"
         for line in msg.splitlines():
             coords = line.split(" ")
-            move = Move(    (   (int(coords[0]),int(coords[1]))   ,  (int(coords[2]),int(coords[3]))   ),    0)
+            move = Move(    (   (int(coords[0]),int(coords[1]))   ,  (int(coords[2]),int(coords[3]))   ),    peercon.id)
             self.delta_moves.append(move)
         print self.delta_moves
                 
@@ -88,54 +84,6 @@ class Peers(btpeer.BTPeer,threading.Thread):
                 self.msg_moves=set()
                 
     def buildMessage(self,moves):
-        if len(moves)>0:
+        if moves != None:
             for move in moves:
                 self.msg_moves.add(move)
-                
-                
-pygame.init()
-width,height = size = 800,600 
-screen = pygame.display.set_mode(size)
-board = pygame.Surface(size)
-background_color = 255,255,255
-foreground_color = 0,0,0
-color_count = 0
-move = [(-1,-1),(-1,1)]
-board.fill(background_color)
-
-peerlistener = Peers(12,1337)
-mouselistener = MouseListener(0)
-owner = peerlistener.serverhost
-for i in range(1,len(sys.argv)):
-    peerlistener.addpeer(i, sys.argv[i], 1337)
-listeners = [mouselistener,peerlistener]
-peerlistener.start()
-
-frame_counter = 0
-while 1:
-
-    screen.fill(background_color)
-    if frame_counter%1 == 0:
-        mouselistener.run()
-    if pygame.QUIT in pygame.event.get():
-        quit()
-    if pygame.key.get_pressed()[pygame.K_SPACE]:
-        board.fill(background_color)
-    new_moves = []
-    tmp = mouselistener.getMoves()
-    if tmp != None:
-        new_moves.extend(tmp)
-        peerlistener.buildMessage(new_moves)
-    tmp = peerlistener.getMoves()
-    print tmp
-    if tmp != None:
-        new_moves.extend(tmp)
-    if len(tmp)>0:
-        last_point = tmp[0].points[0]
-    for move in new_moves:
-        pygame.draw.aaline(board,foreground_color,move.points[0],move.points[1],10)
-        last_point=move.points[1]
-    frame_counter+=1
-    peerlistener.send_message()
-    screen.blit(board,pygame.Rect((0,0),size))
-    pygame.display.flip()
