@@ -31,6 +31,7 @@ COLORS = [(255,0,0),(0,255,0),(255,255,0),(0,255,255),(0,0,0)]
 
 class App:  
     def __init__(self,server_address):
+        self.count=1
         self.background_color = 0,0,0
         self.width,self.height = self.size = DEFAULT_SIZE     #Set the screen dimensions
         pygame.init()    
@@ -46,13 +47,15 @@ class App:
         network_input = self.peerlistener.getMoves()
         pygame.event.poll()
         self.screen.fill(self.background_color)
-        self.mouselistener.run()
+        if self.count%5==0:
+            self.mouselistener.run()
         if pygame.key.get_pressed()[pygame.K_SPACE]:
             self.board.clear()      #Have this also send a message
         local_input = self.mouselistener.getMoves()
         self.draw(network_input)
         self.draw(local_input)
         self.broadcast(local_input)
+        self.count+=1
 
     def draw(self,moves):
         self.board.draw_moves(moves)

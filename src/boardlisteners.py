@@ -31,18 +31,14 @@ class MouseListener(threading.Thread):
             else:
                 self.recent_pos = []
     def getMoves(self):
-        recent_pos = []
-        for pos in self.recent_pos:
-            recent_pos.append(pos)
-        delta_moves = []
-        if len(recent_pos) < 3:
-            return
-        else:
-            for i in range(1,len(recent_pos)):
-                if recent_pos[i-1] != recent_pos[i]:
-                    delta_moves.append(Move((recent_pos[i-1],recent_pos[i]),self.ownerid))
-            self.recent_pos = recent_pos[-2:]
-        return delta_moves
+        if len(self.recent_pos):
+            delta = set()
+            last_pos = self.recent_pos[0]
+            for pos in self.recent_pos[1:]:
+                if pos!=last_pos:
+                    delta.add(Move((last_pos,pos),self.ownerid))
+                last_pos = pos
+            return delta
 
 class Peers(btpeer.BTPeer,threading.Thread):
     
@@ -79,5 +75,8 @@ class Peers(btpeer.BTPeer,threading.Thread):
             self.msg=""
     def buildMessage(self,moves):
         if moves != None:
-            for move in moves:
-                self.msg+=str(move)+"\n"
+            msgs = set()
+            for move in set(moves):
+                msgs.add(str(move))
+            for txt in msgs:
+                self.msg+=txt+"\n"
