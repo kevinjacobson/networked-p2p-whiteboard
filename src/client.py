@@ -6,6 +6,7 @@ import SocketServer
 import sys
 import btpeer
 import boardlisteners
+import random
 
 DEFAULT_SIZE = 800,600
 
@@ -35,7 +36,7 @@ class App:
         pygame.init()    
         self.screen = pygame.display.set_mode(self.size)  #Grab the display surface
         self.board = Board(self.size)                     #Create a new surface to draw onto
-        self.mouselistener = boardlisteners.MouseListener(0)   
+        self.mouselistener = boardlisteners.MouseListener(random.randint(0,4))   
         self.peerlistener = boardlisteners.Peers(100,1337)
         self.peerlistener.addpeer(1, server_address, 1337)
         self.peerlistener.start()
