@@ -41,7 +41,7 @@ class App:
         self.peerlistener = boardlisteners.Peers(100,1337)
         self.peerlistener.addpeer(1, server_address, 1337)
         self.peerlistener.start()
-    
+        self.output = set() 
 
     def update(self):
         network_input = self.peerlistener.getMoves()
@@ -51,16 +51,23 @@ class App:
             self.mouselistener.run()
         if pygame.key.get_pressed()[pygame.K_SPACE]:
             self.board.clear()      #Have this also send a message
-        local_input = self.mouselistener.getMoves()
+        new_moves = self.mouselistener.getMoves()
+        local_input = list()
+        if new_moves:
+            for move in self.mouselistener.getMoves():
+                self.output.add(move)
+            local_input = list(set(self.output))
         self.draw(network_input)
         self.draw(local_input)
-        self.broadcast(local_input)
+        self.broadcast(self.output)
+        self.output=set()
         self.count+=1
+        pygame.display.flip()
 
     def draw(self,moves):
         self.board.draw_moves(moves)
         self.screen.blit(self.board.surface,pygame.Rect((0,0),self.size))
-        pygame.display.flip()
+        
     
     def broadcast(self,moves):
         self.peerlistener.buildMessage(moves)

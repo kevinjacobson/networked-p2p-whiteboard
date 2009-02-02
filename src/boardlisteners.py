@@ -73,6 +73,7 @@ class Peers(btpeer.BTPeer,threading.Thread):
             for i in self.peers.keys():
                 threading.Thread(target=self.sendtopeer, args=[i,'MOVE',self.msg]).start()
             self.msg=""
+            self.msg_moves=set()
     def buildMessage(self,moves):
         if moves != None:
             msgs = set()
