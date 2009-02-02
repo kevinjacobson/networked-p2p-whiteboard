@@ -10,9 +10,7 @@ class Move:
     def __init__(self,points,ownerid):
         self.points=points
         self.start = points[0]
-        
         self.end = points[1]
-        str(self.end)+'-'+str(self.start)
         self.ownerid = ownerid
     def __str__(self):
         result = str(self.ownerid)+" " + str(self.start[0]) + " " + str(self.start[1]) + " " + str(self.end[0]) + " " + str(self.end[1]) 
@@ -38,6 +36,8 @@ class MouseListener(threading.Thread):
                 if pos!=last_pos:
                     delta.add(Move((last_pos,pos),self.ownerid))
                 last_pos = pos
+            self.recent_pos = []
+            print delta
             return delta
 
 class Peers(btpeer.BTPeer,threading.Thread):
@@ -45,7 +45,7 @@ class Peers(btpeer.BTPeer,threading.Thread):
     def __init__( self, maxpeers, serverport, myid=None, serverhost = None ):
         btpeer.BTPeer.__init__(self, maxpeers, serverport, myid, serverhost)
         threading.Thread.__init__(self)
-        self.debug = True
+        self.debug = False
         self.delta_moves = []
         self.addhandler('MOVE', self.movesHandler)
         self.msg_moves = set()
