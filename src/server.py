@@ -16,21 +16,11 @@ class Server:
             i+=1
         self.peerlistener.start()
     
-    
-
     def update(self):
-        network_input = self.peerlistener.getMoves()
-        self.broadcast(network_input)
-        
-    def broadcast(self,moves):
-        self.peerlistener.buildMessage(moves)
-        self.peerlistener.send_message()
-        
-    def run(self):
         while 1:           
-            self.update()   
+            self.peerlistener.relay()   
             
 if __name__ == "__main__":
     print sys.argv[1:]
     server = Server(sys.argv[1:])
-    server.run()
+    server.update()

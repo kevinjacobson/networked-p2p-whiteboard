@@ -20,7 +20,6 @@ class Move:
         return result
 
 class MouseListener(threading.Thread):
-    
     def __init__(self,ownerid):
         self.ownerid = ownerid
         threading.Thread.__init__(self)
@@ -35,7 +34,6 @@ class MouseListener(threading.Thread):
         recent_pos = []
         for pos in self.recent_pos:
             recent_pos.append(pos)
-        
         delta_moves = []
         if len(recent_pos) < 3:
             return
@@ -66,18 +64,19 @@ class Peers(btpeer.BTPeer,threading.Thread):
             move = Move(    (   (int(coords[1]),int(coords[2]))   ,  (int(coords[3]),int(coords[4]))   ),int(coords[0]))
             self.delta_moves.append(move)
         #print self.delta_moves
-                
     def getMoves(self):
         temp = []
         temp.extend(self.delta_moves)
         self.delta_moves = []
         return temp
+    def relay(self):
+        self.buildMessage(self.getMoves())
+        self.send_message()
     def send_message(self):
-                if len(self.msg)>200:
-                    for i in self.peers.keys():
-                        threading.Thread(target=self.sendtopeer, args=[i,'MOVE',self.msg]).start()
-                    self.msg=""
-                                    
+        if len(self.msg)>200:
+            for i in self.peers.keys():
+                threading.Thread(target=self.sendtopeer, args=[i,'MOVE',self.msg]).start()
+            self.msg=""
     def buildMessage(self,moves):
         if moves != None:
             for move in moves:
