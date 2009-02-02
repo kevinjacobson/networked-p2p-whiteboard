@@ -59,6 +59,7 @@ class BTPeer:
         self.__debug( 'New child ' + str(threading.currentThread().getName()) )
         self.__debug( 'Connected ' + str(clientsock.getpeername()) )
         host, port = clientsock.getpeername()
+        #print host
         peerconn = BTPeerConnection( None, host, port, clientsock, debug=False )
     
         try:
@@ -69,7 +70,7 @@ class BTPeer:
                 self.__debug( 'Not handled: %s: %s' % (msgtype, msgdata) )
             else:
                 self.__debug( 'Handling peer msg: %s: %s' % (msgtype, msgdata) )
-                print peerconn
+                #print peerconn
                 self.handlers[ msgtype ]( peerconn, msgdata )
         except KeyboardInterrupt:
             raise
@@ -232,6 +233,7 @@ class BTPeer:
     #--------------------------------------------------------------------------
         msgreply = []
         try:
+            #print host
             peerconn = BTPeerConnection( pid, host, port, debug=self.debug )
             peerconn.senddata( msgtype, msgdata )
             self.__debug( 'Sent %s: %s' % (pid, msgtype) )
@@ -295,7 +297,9 @@ class BTPeer:
         while not self.shutdown:
             try:
                 self.__debug( 'Listening for connections...' )
-                clientsock, clientaddr = s.accept()
+                q = s.accept()
+                #print q
+                clientsock, clientaddr = q
                 clientsock.settimeout(None)
     
                 t = threading.Thread( target = self.__handlepeer,
@@ -339,6 +343,7 @@ class BTPeerConnection:
     
         if not sock:
             self.s = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+            print host
             self.s.connect( ( host, int(port) ) )
         else:
             self.s = sock

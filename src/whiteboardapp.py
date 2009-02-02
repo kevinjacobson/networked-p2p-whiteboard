@@ -43,9 +43,11 @@ class App:
         self.add_peers(sys.argv[1:])
         self.peerlistener.start()
     
-    def add_peers(self,*connecting_peers):
-        for i,peer in zip(range(1,len(connecting_peers)+1),connecting_peers):   
+    def add_peers(self,connecting_peers):
+        i = 1
+        for peer in connecting_peers:
             self.peerlistener.addpeer(i,peer,1337)
+            i+=1
     
 
     def update(self):
@@ -82,4 +84,5 @@ class App:
             
 if __name__ == "__main__":
     app = App()
+    app.add_peers(["129.21.20.153"])
     app.run()
