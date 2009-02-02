@@ -1,4 +1,3 @@
-import pygame
 import threading
 import random
 import socket
@@ -6,26 +5,6 @@ import SocketServer
 import sys
 import btpeer
 import boardlisteners
-
-DEFAULT_SIZE = 800,600
-
-class Board:
-
-    def __init__(self,size,background_color=(255,255,255)):
-        self.size = self.x, self.y = size
-        self.surface = pygame.Surface(self.size) 
-        self.background_color = background_color
-        self.clear()
-    def clear(self):
-        self.surface.fill(self.background_color)
-        
-    def draw_moves(self,moves):
-        if moves != None:
-            for move in moves:
-                print move
-                pygame.draw.aaline(self.surface,COLORS[move.ownerid],move.points[0],move.points[1],10)
-             
-
 
 class Server:  
     def __init__(self,clients):
@@ -51,5 +30,5 @@ class Server:
             self.update()   
             
 if __name__ == "__main__":
-    server = Server(["localhost"])
+    server = Server(sys.argv[1:])
     server.run()

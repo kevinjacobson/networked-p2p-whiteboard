@@ -70,5 +70,5 @@ class App:
             self.update()   
             
 if __name__ == "__main__":
-    app = App("localhost")
+    app = App(sys.argv[1])
     app.run()
