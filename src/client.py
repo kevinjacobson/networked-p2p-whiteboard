@@ -51,7 +51,6 @@ class App:
             self.board.clear()      #Have this also send a message
         local_input = self.mouselistener.getMoves()
         self.draw(network_input)
-        self.draw(local_input)
         self.broadcast(local_input)
 
     def draw(self,moves):
