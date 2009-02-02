@@ -15,7 +15,7 @@ class Move:
         str(self.end)+'-'+str(self.start)
         self.ownerid = ownerid
     def __str__(self):
-        result = "Owner #"+str(self.ownerid) + ":\n" + str(self.start[0]) + " " + str(self.start[1]) + " " + str(self.end[0]) + " " + str(self.end[1]) 
+        result = str(self.ownerid)+" " + str(self.start[0]) + " " + str(self.start[1]) + " " + str(self.end[0]) + " " + str(self.end[1]) 
         #print result
         return result
 
@@ -63,7 +63,7 @@ class Peers(btpeer.BTPeer,threading.Thread):
         #print "Message:\n"
         for line in msg.splitlines():
             coords = line.split(" ")
-            move = Move(    (   (int(coords[0]),int(coords[1]))   ,  (int(coords[2]),int(coords[3]))   ),    peercon.id)
+            move = Move(    (   (int(coords[1]),int(coords[2]))   ,  (int(coords[3]),int(coords[4]))   ),    int(coords[0]))
             self.delta_moves.append(move)
         #print self.delta_moves
                 
