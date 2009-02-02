@@ -8,7 +8,7 @@ import sys
 import btpeer
 import boardlisteners
 import random
-
+ 
 DEFAULT_SIZE = 800,600
 
 class Board:
