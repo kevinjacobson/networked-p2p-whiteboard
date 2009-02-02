@@ -63,7 +63,7 @@ class Peers(btpeer.BTPeer,threading.Thread):
         #print "Message:\n"
         for line in msg.splitlines():
             coords = line.split(" ")
-            move = Move(    (   (int(coords[1]),int(coords[2]))   ,  (int(coords[3]),int(coords[4]))   ),    int(coords[0]))
+            move = Move(    (   (int(coords[1]),int(coords[2]))   ,  (int(coords[3]),int(coords[4]))   ),int(coords[0]))
             self.delta_moves.append(move)
         #print self.delta_moves
                 
@@ -73,11 +73,10 @@ class Peers(btpeer.BTPeer,threading.Thread):
         self.delta_moves = []
         return temp
     def send_message(self):
-                if len(self.msg)>120:
+                if len(self.msg)>500:
+                    print len(self.peers.keys())
                     for i in self.peers.keys():
-                        print "SENDING TO PEER!"
-                        print i
-                        print self.msg
+                        print "SENDING TO PEER" + str(i)
                         threading.Thread(target=self.sendtopeer, args=[i,'MOVE',self.msg]).start()
                     self.msg=""
                 

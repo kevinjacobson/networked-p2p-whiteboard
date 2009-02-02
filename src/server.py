@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import threading
 import random
 import socket
@@ -11,7 +12,7 @@ class Server:
         self.peerlistener = boardlisteners.Peers(100,1337)
         i = 1
         for client in clients:
-            self.peerlistener.addpeer(1, client, 1337)
+            self.peerlistener.addpeer(i, client, 1337)
             i+=1
         self.peerlistener.start()
     
@@ -30,5 +31,6 @@ class Server:
             self.update()   
             
 if __name__ == "__main__":
+    print sys.argv[1:]
     server = Server(sys.argv[1:])
     server.run()

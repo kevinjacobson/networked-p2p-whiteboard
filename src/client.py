@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import pygame
 import threading
 import random
@@ -23,7 +24,6 @@ class Board:
     def draw_moves(self,moves):
         if moves != None:
             for move in moves:
-                print move
                 pygame.draw.aaline(self.surface,COLORS[move.ownerid],move.points[0],move.points[1],10)
             
 COLORS = [(255,0,0),(0,255,0),(255,255,0),(0,255,255),(0,0,0)]        
