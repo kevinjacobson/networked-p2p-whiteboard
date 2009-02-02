@@ -29,15 +29,15 @@ class MouseListener(threading.Thread):
             else:
                 self.recent_pos = []
     def getMoves(self):
-        if len(self.recent_pos):
-            delta = set()
+        if len(self.recent_pos) > 3:
+            delta = [] 
             last_pos = self.recent_pos[0]
             for pos in self.recent_pos[1:]:
                 if pos!=last_pos:
-                    delta.add(Move((last_pos,pos),self.ownerid))
+                    delta.append(Move((last_pos,pos),self.ownerid))
                 last_pos = pos
-            self.recent_pos = []
-            print delta
+            self.recent_pos = self.recent_pos[-1:]
+            print self.recent_pos
             return delta
 
 class Peers(btpeer.BTPeer,threading.Thread):
@@ -48,7 +48,7 @@ class Peers(btpeer.BTPeer,threading.Thread):
         self.debug = False
         self.delta_moves = []
         self.addhandler('MOVE', self.movesHandler)
-        self.msg_moves = set()
+        self.msg_moves = []
         self.msg = ""
         self.counter = 1
     def run(self):
@@ -65,19 +65,18 @@ class Peers(btpeer.BTPeer,threading.Thread):
         temp.extend(self.delta_moves)
         self.delta_moves = []
         return temp
+
     def relay(self):
         self.buildMessage(self.getMoves())
         self.send_message()
     def send_message(self):
         if len(self.msg)>200:
+            print self.msg
             for i in self.peers.keys():
                 threading.Thread(target=self.sendtopeer, args=[i,'MOVE',self.msg]).start()
             self.msg=""
-            self.msg_moves=set()
+            self.msg_moves=[]
     def buildMessage(self,moves):
         if moves != None:
-            msgs = set()
-            for move in set(moves):
-                msgs.add(str(move))
-            for txt in msgs:
-                self.msg+=txt+"\n"
+            for move in moves:
+                self.msg+=str(move)+"\n"

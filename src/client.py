@@ -54,7 +54,7 @@ class App:
         new_moves = self.mouselistener.getMoves()
         local_input = list()
         if new_moves:
-            for move in self.mouselistener.getMoves():
+            for move in new_moves:
                 self.output.add(move)
             local_input = list(set(self.output))
         self.draw(network_input)
