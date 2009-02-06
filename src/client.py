@@ -26,11 +26,11 @@ class Board:
             for move in moves:
                 pygame.draw.aaline(self.surface,COLORS[move.ownerid],move.points[0],move.points[1],10)
             
-COLORS = [(255,0,0),(0,255,0),(255,255,0),(0,255,255),(0,0,0)]        
+COLORS = [(255,0,0),(0,255,0),(255,0,255),(0,255,255),(0,0,0)]        
 
 
 class App:  
-    def __init__(self,server_address):
+    def __init__(self,*address):
         self.count=1
         self.background_color = 0,0,0
         self.width,self.height = self.size = DEFAULT_SIZE     #Set the screen dimensions
@@ -39,7 +39,10 @@ class App:
         self.board = Board(self.size)                     #Create a new surface to draw onto
         self.mouselistener = boardlisteners.MouseListener(random.randint(0,4))   
         self.peerlistener = boardlisteners.Peers(100,1337)
-        self.peerlistener.addpeer(1, server_address, 1337)
+        index = 1
+        for peer in address:
+            self.peerlistener.addpeer(index,peer,1337)
+            index+=1
         self.peerlistener.start()
         self.output = set() 
 
@@ -47,7 +50,7 @@ class App:
         network_input = self.peerlistener.getMoves()
         pygame.event.poll()
         self.screen.fill(self.background_color)
-        if self.count%5==0:
+        if self.count%5==0: #Prevents too much data from being collected
             self.mouselistener.run()
         if pygame.key.get_pressed()[pygame.K_SPACE]:
             self.board.clear()      #Have this also send a message
@@ -58,8 +61,8 @@ class App:
                 self.output.add(move)
             local_input = list(set(self.output))
         self.draw(network_input)
-        self.draw(local_input)
-        self.broadcast(self.output)
+        #self.draw(local_input)
+        self.broadcast(local_input)
         self.output=set()
         self.count+=1
         pygame.display.flip()

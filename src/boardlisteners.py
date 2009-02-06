@@ -63,14 +63,14 @@ class Peers(btpeer.BTPeer,threading.Thread):
     def getMoves(self):
         temp = []
         temp.extend(self.delta_moves)
-        self.delta_moves = []
+        self.delta_moves = list()
         return temp
 
     def relay(self):
         self.buildMessage(self.getMoves())
         self.send_message()
     def send_message(self):
-        if len(self.msg)>200:
+        if len(self.msg)>100:
             print self.msg
             for i in self.peers.keys():
                 threading.Thread(target=self.sendtopeer, args=[i,'MOVE',self.msg]).start()
