@@ -10,7 +10,7 @@ import boardlisteners
 import random
  
 DEFAULT_SIZE = 800,600
-
+pygame.init()    
 class Board:
 
     def __init__(self,size,background_color=(255,255,255)):
@@ -27,17 +27,18 @@ class Board:
                 pygame.draw.aaline(self.surface,COLORS[move.ownerid],move.points[0],move.points[1],10)
             
 COLORS = [(255,0,0),(0,255,0),(255,0,255),(0,255,255),(0,0,0)]        
-
+title = "Multimouse Whiteboarding"
 
 class App:  
     def __init__(self,*address):
         self.count=1
         self.background_color = 0,0,0
         self.width,self.height = self.size = DEFAULT_SIZE     #Set the screen dimensions
-        pygame.init()    
+        pygame.mouse.set_visible(False)
         self.screen = pygame.display.set_mode(self.size)  #Grab the display surface
         self.board = Board(self.size)                     #Create a new surface to draw onto
         self.mouselistener = boardlisteners.MouseListener(random.randint(0,4))   
+        pygame.display.set_caption(title + " UID:" + str(self.mouselistener.ownerid))
         self.peerlistener = boardlisteners.Peers(100,1337)
         index = 1
         for peer in address:
@@ -61,12 +62,17 @@ class App:
                 self.output.add(move)
             local_input = list(set(self.output))
         self.draw(network_input)
-        #self.draw(local_input)
+        self.draw(local_input)
         self.broadcast(local_input)
         self.output=set()
         self.count+=1
+        self.draw_mouse()
         pygame.display.flip()
 
+    def draw_mouse(self):
+        x,y = pos = pygame.mouse.get_pos()
+        if not (x < 0 or y < 0 or x > self.width or y > self.height):
+            pygame.draw.circle(self.screen,COLORS[self.mouselistener.ownerid],pos,3)
     def draw(self,moves):
         self.board.draw_moves(moves)
         self.screen.blit(self.board.surface,pygame.Rect((0,0),self.size))
@@ -84,5 +90,5 @@ class App:
             self.update()   
             
 if __name__ == "__main__":
-    app = App(sys.argv[1])
+    app = App(sys.argv[1:])
     app.run()
