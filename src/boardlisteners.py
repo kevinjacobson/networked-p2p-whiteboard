@@ -23,7 +23,7 @@ class MouseListener(threading.Thread):
         threading.Thread.__init__(self)
         self.recent_pos = []
     def run(self):  
-            pygame.event.poll()
+            events = pygame.event.get()
             if pygame.mouse.get_pressed()[0]:
                 self.recent_pos.append(pygame.mouse.get_pos())
             else:
@@ -37,7 +37,7 @@ class MouseListener(threading.Thread):
                     delta.append(Move((last_pos,pos),self.ownerid))
                 last_pos = pos
             self.recent_pos = self.recent_pos[-1:]
-            print self.recent_pos
+            #print self.recent_pos
             return delta
 
 class Peers(btpeer.BTPeer,threading.Thread):
@@ -45,7 +45,7 @@ class Peers(btpeer.BTPeer,threading.Thread):
     def __init__( self, maxpeers, serverport, myid=None, serverhost = None ):
         btpeer.BTPeer.__init__(self, maxpeers, serverport, myid, serverhost)
         threading.Thread.__init__(self)
-        self.debug = False
+        self.debug = False 
         self.delta_moves = []
         self.addhandler('MOVE', self.movesHandler)
         self.msg_moves = []
@@ -55,6 +55,7 @@ class Peers(btpeer.BTPeer,threading.Thread):
         self.mainloop()
     def movesHandler(self,peercon,msg):
         #print "Message:\n"
+        #print msg
         for line in msg.splitlines():
             coords = line.split(" ")
             move = Move(    (   (int(coords[1]),int(coords[2]))   ,  (int(coords[3]),int(coords[4]))   ),int(coords[0]))
@@ -71,12 +72,16 @@ class Peers(btpeer.BTPeer,threading.Thread):
         self.send_message()
     def send_message(self):
         if len(self.msg)>100:
-            print self.msg
+            #print self.msg
             for i in self.peers.keys():
+                print "OK!"
+                print self.msg
+                
                 threading.Thread(target=self.sendtopeer, args=[i,'MOVE',self.msg]).start()
             self.msg=""
             self.msg_moves=[]
     def buildMessage(self,moves):
         if moves != None:
             for move in moves:
+                #print move
                 self.msg+=str(move)+"\n"

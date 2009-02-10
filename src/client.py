@@ -79,6 +79,7 @@ class App:
         
     
     def broadcast(self,moves):
+        #print moves
         self.peerlistener.buildMessage(moves)
         self.peerlistener.send_message()
         
