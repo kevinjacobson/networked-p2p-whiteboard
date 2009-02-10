@@ -45,7 +45,7 @@ class Peers(btpeer.BTPeer,threading.Thread):
     def __init__( self, maxpeers, serverport, myid=None, serverhost = None ):
         btpeer.BTPeer.__init__(self, maxpeers, serverport, myid, serverhost)
         threading.Thread.__init__(self)
-        self.debug = False 
+        self.debug = True
         self.delta_moves = []
         self.addhandler('MOVE', self.movesHandler)
         self.msg_moves = []
@@ -74,9 +74,7 @@ class Peers(btpeer.BTPeer,threading.Thread):
         if len(self.msg)>100:
             #print self.msg
             for i in self.peers.keys():
-                print "OK!"
-                print self.msg
-                
+                print i
                 threading.Thread(target=self.sendtopeer, args=[i,'MOVE',self.msg]).start()
             self.msg=""
             self.msg_moves=[]

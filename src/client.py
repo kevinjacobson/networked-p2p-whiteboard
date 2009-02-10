@@ -30,7 +30,7 @@ COLORS = [(255,0,0),(0,255,0),(255,0,255),(0,255,255),(0,0,0)]
 title = "Multimouse Whiteboarding"
 
 class App:  
-    def __init__(self,*address):
+    def __init__(self,addresses):
         self.count=1
         self.background_color = 0,0,0
         self.width,self.height = self.size = DEFAULT_SIZE     #Set the screen dimensions
@@ -41,7 +41,7 @@ class App:
         pygame.display.set_caption(title + " UID:" + str(self.mouselistener.ownerid))
         self.peerlistener = boardlisteners.Peers(100,1337)
         index = 1
-        for peer in address:
+        for peer in addresses:
             self.peerlistener.addpeer(index,peer,1337)
             index+=1
         self.peerlistener.start()

@@ -343,7 +343,7 @@ class BTPeerConnection:
     
         if not sock:
             self.s = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
-            #print host
+            host = host
             self.s.connect( ( host, int(port) ) )
         else:
             self.s = sock
