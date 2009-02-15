@@ -23,7 +23,9 @@ class MouseListener(threading.Thread):
         threading.Thread.__init__(self)
         self.recent_pos = []
     def run(self):  
-            events = pygame.event.get()
+            pygame.event.pump()
+          #  if pygame.key.get_pressed()[pygame.K_LEFT]:
+        #           print self.ownerid
             if pygame.mouse.get_pressed()[0]:
                 self.recent_pos.append(pygame.mouse.get_pos())
             else:

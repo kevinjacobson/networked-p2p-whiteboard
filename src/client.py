@@ -85,11 +85,16 @@ class App:
         
     def run(self):
         while 1:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit() 
+            if pygame.event.get(pygame.QUIT):
+                    sys.exit()
             self.update()   
             
 if __name__ == "__main__":
-    app = App(sys.argv[1:])
+    if len(sys.argv)>1:
+        app = App(sys.argv[1:])
+    else:
+        peers = file("peers.txt").readlines()
     app.run()
+
+
+
