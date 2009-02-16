@@ -93,7 +93,10 @@ if __name__ == "__main__":
     if len(sys.argv)>1:
         app = App(sys.argv[1:])
     else:
-        peers = file("peers.txt").readlines()
+        peers = []
+        for peer in open("peers.txt").readlines():
+            peers.append(peer.strip())
+        app = App(peers)
     app.run()
 
 
