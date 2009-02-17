@@ -97,7 +97,6 @@ if __name__ == "__main__":
         peers = []
         for peer in open("peers.txt").readlines():
             peers.append(peer.strip())
-            print peers
         app = App(peers)
     app.run()
 
