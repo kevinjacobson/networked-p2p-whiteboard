@@ -67,6 +67,7 @@ class App:
         self.output=set()
         self.count+=1
         self.draw_mouse()
+        print threading.enumerate()
         pygame.display.flip()
 
     def draw_mouse(self):
@@ -96,6 +97,7 @@ if __name__ == "__main__":
         peers = []
         for peer in open("peers.txt").readlines():
             peers.append(peer.strip())
+            print peers
         app = App(peers)
     app.run()
 

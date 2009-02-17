@@ -245,7 +245,7 @@ class BTPeer:
                     self.__debug( 'Got reply %s: %s' 
                       % ( pid, str(msgreply) ) )
                     onereply = peerconn.recvdata()
-                peerconn.close()
+           	peerconn.close()
         except KeyboardInterrupt:
             raise
         except:
