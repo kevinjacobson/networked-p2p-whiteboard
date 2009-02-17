@@ -67,7 +67,6 @@ class App:
         self.output=set()
         self.count+=1
         self.draw_mouse()
-        print threading.enumerate()
         pygame.display.flip()
 
     def draw_mouse(self):
