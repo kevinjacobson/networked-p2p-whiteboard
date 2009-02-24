@@ -74,9 +74,8 @@ class Peers(btpeer.BTPeer,threading.Thread):
         self.send_message()
     def send_message(self):
         if len(self.msg)>100:
-            #print self.msg
+            print self.msg
             for i in self.peers.keys():
-                print i
                 threading.Thread(target=self.sendtopeer, args=[i,'MOVE',self.msg]).start()
             self.msg=""
             self.msg_moves=[]

@@ -24,9 +24,9 @@ class Board:
     def draw_moves(self,moves):
         if moves != None:
             for move in moves:
-                pygame.draw.aaline(self.surface,COLORS[move.ownerid],move.points[0],move.points[1],10)
+                pygame.draw.line(self.surface,COLORS[move.ownerid],move.points[0],move.points[1],7)
             
-COLORS = [(255,0,0),(0,255,0),(255,0,255),(0,255,255),(0,0,0)]        
+COLORS = [(0,0,0),(255,0,0),(255,0,255),(0,255,0),(0,124,255),(124,124,0)]        
 title = "Multimouse Whiteboarding"
 
 class App:  
@@ -37,7 +37,7 @@ class App:
         pygame.mouse.set_visible(False)
         self.screen = pygame.display.set_mode(self.size)  #Grab the display surface
         self.board = Board(self.size)                     #Create a new surface to draw onto
-        self.mouselistener = boardlisteners.MouseListener(random.randint(0,4))   
+        self.mouselistener = boardlisteners.MouseListener(random.randint(0,len(COLORS)-1))   
         pygame.display.set_caption(title + " UID:" + str(self.mouselistener.ownerid))
         self.peerlistener = boardlisteners.Peers(100,1337)
         index = 1
